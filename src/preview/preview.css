@@ -273,24 +273,29 @@ body.font-large .question-title {
 }
 
 .question-prompt table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 10px 0;
+  width: auto !important;
+  min-width: 220px;
+  max-width: 100%;
+  border-collapse: collapse !important;
+  margin: 14px auto !important;
+  border: 1.5px solid #111827 !important;
+  background: #ffffff !important;
   page-break-inside: avoid;
   break-inside: avoid;
 }
 
 .question-prompt th,
 .question-prompt td {
-  border: 1px solid #374151;
-  padding: 6px 10px;
-  text-align: left;
-  font-size: 13px;
+  border: 1px solid #111827 !important;
+  padding: 6px 14px !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+  font-size: 13.5px;
 }
 
 .question-prompt th {
   background-color: #f3f4f6;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .question-prompt pre,
@@ -310,7 +315,35 @@ body.font-large .question-title {
   white-space: pre-wrap;
 }
 
-/* MathJax / KaTeX containers */
+/* ==========================================================================
+   MathJax & KaTeX Equation Rendering & Duplicate Hiding
+   ========================================================================== */
+.katex .katex-mathml {
+  display: none !important;
+  position: absolute !important;
+  clip: rect(1px, 1px, 1px, 1px) !important;
+  padding: 0 !important;
+  border: 0 !important;
+  height: 1px !important;
+  width: 1px !important;
+  overflow: hidden !important;
+}
+
+.katex .katex-html {
+  display: inline-block !important;
+}
+
+.katex {
+  font-size: 1.06em !important;
+  font-family: KaTeX_Main, "Times New Roman", Times, serif !important;
+  line-height: 1.2 !important;
+  text-indent: 0 !important;
+}
+
+mjx-assistive-mml {
+  display: none !important;
+}
+
 .question-prompt mjx-container,
 .question-prompt .katex {
   font-size: 105%;

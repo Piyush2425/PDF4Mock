@@ -72,10 +72,18 @@
 
     clone.querySelectorAll(unwantedSelectors.join(", ")).forEach(el => el.remove());
 
-    // Explicitly remove UI labels/containers containing "Your answer", "Enter your answer", or "Flag for review"
-    clone.querySelectorAll("div, section, aside, span, p, h1, h2, h3, h4, label").forEach(el => {
+    // Explicitly remove UI labels/containers containing "Your answer", "Enter your answer", "Flag for review", or "Question Type :" metadata
+    clone.querySelectorAll("div, section, aside, span, p, h1, h2, h3, h4, label, font, b, i").forEach(el => {
       const text = el.innerText?.trim() || "";
-      if (/^Your\s*answer/i.test(text) || /^Enter\s*your\s*answer/i.test(text) || /^Only\s*numeric\s*Input/i.test(text) || /Flag\s*for\s*review/i.test(text)) {
+      if (
+        /^Your\s*answer/i.test(text) ||
+        /^Enter\s*your\s*answer/i.test(text) ||
+        /^Only\s*numeric\s*Input/i.test(text) ||
+        /Flag\s*for\s*review/i.test(text) ||
+        /^Question\s*Type\s*:/i.test(text) ||
+        /Marks\s*for\s*correct\s*answer/i.test(text) ||
+        /Negative\s*Marks\s*\d+/i.test(text)
+      ) {
         el.remove();
       }
     });
