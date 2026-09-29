@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GATE Practice Paper - Print Preview</title>
+  <link rel="stylesheet" href="preview.css">
+</head>
+<body>
+  <!-- Floating Control Bar (Hidden when printing) -->
+  <div class="no-print control-bar" id="controlBar">
+    <div class="control-left">
+      <div class="control-brand">
+        <span class="brand-icon">📑</span>
+        <strong id="previewBrandTitle">Practice Paper Preview</strong>
+      </div>
+      <div class="safety-badge" id="safetyBadge">
+        🛡️ Answer Leaks Removed • Verified Clean
+      </div>
+    </div>
+
+    <div class="control-actions">
+      <!-- Working space selector -->
+      <div class="control-group">
+        <label for="workspaceSelect">Working Space:</label>
+        <select id="workspaceSelect">
+          <option value="none">None</option>
+          <option value="small">Small (~2 lines)</option>
+          <option value="medium" selected>Medium (~5 lines)</option>
+          <option value="large">Large (~8 lines)</option>
+        </select>
+      </div>
+
+      <!-- Font size selector -->
+      <div class="control-group">
+        <label for="fontSizeSelect">Font Size:</label>
+        <select id="fontSizeSelect">
+          <option value="compact">Compact</option>
+          <option value="normal" selected>Normal</option>
+          <option value="large">Comfortable</option>
+        </select>
+      </div>
+
+      <!-- Print Button -->
+      <button class="btn-print" id="btnPrint">
+        🖨️ Print / Save as PDF (Ctrl + P)
+      </button>
+    </div>
+  </div>
+
+  <!-- Printable Paper Container -->
+  <div class="paper-container" id="paperContainer">
+    <!-- Paper Header -->
+    <header class="paper-header">
+      <div class="header-main-title" id="paperMainTitle">GATE PRACTICE QUESTION PAPER</div>
+      <div class="header-sub-title" id="paperSubTitle">PRACTICE EXAM COPY</div>
+      <div class="header-meta-grid">
+        <div class="meta-item">
+          <span class="meta-label">Assessment:</span>
+          <span class="meta-val" id="paperMockNumber">Mock Test #1</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Source Platform:</span>
+          <span class="meta-val" id="paperSourcePlatform">NPTEL</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Subject / Title:</span>
+          <span class="meta-val" id="paperTestTitle">-</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Questions:</span>
+          <span class="meta-val" id="paperQuestionCount">-</span>
+        </div>
+      </div>
+      <div class="header-divider"></div>
+    </header>
+
+    <!-- Questions Render Area -->
+    <main class="questions-list" id="questionsList">
+      <div class="loading-state">Loading questions from test session...</div>
+    </main>
+
+    <!-- Paper Footer -->
+    <footer class="paper-footer">
+      <div class="footer-divider"></div>
+      <div class="footer-text">
+        <span id="footerPlatformText">GATE Practice Question Paper</span>
+        <span>• End of Assessment •</span>
+        <span>Candidate Copy</span>
+      </div>
+    </footer>
+  </div>
+
+  <script src="preview.js"></script>
+</body>
+</html>

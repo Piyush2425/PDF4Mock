@@ -1,0 +1,21 @@
+# Operating System Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE & Editor Configs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Build / Temporary
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.temp/
+.cache/
+dist/
+build/
+*.zip

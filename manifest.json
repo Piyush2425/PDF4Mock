@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+  "name": "NPTEL & GATEOverflow Practice PDF Generator",
+  "version": "1.3.0",
+  "description": "Convert NPTEL GATE mock tests and GATEOverflow quizzes into clean, printable practice question papers without answers or evaluation leakage.",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://seek.nptel.ac.in/*",
+    "https://*.nptel.ac.in/*",
+    "https://gateoverflow.in/*",
+    "https://*.gateoverflow.in/*"
+  ],
+  "action": {
+    "default_popup": "src/popup/popup.html",
+    "default_title": "NPTEL & GATEOverflow Practice PDF"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://seek.nptel.ac.in/*",
+        "https://*.nptel.ac.in/*",
+        "https://gateoverflow.in/*",
+        "https://*.gateoverflow.in/*"
+      ],
+      "js": ["src/content/content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

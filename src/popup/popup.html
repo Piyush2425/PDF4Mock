@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NPTEL & GATEOverflow Practice PDF</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo-area">
+        <img src="../../icons/logo.png" alt="Logo" class="app-logo">
+        <div class="header-text">
+          <h1>GATE Practice PDF</h1>
+          <p class="subtitle" id="platformSubtitle">NPTEL & GATEOverflow Exporter</p>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="content">
+      <!-- Status Card -->
+      <div id="statusCard" class="status-card pending">
+        <div class="status-icon" id="statusIcon">⏳</div>
+        <div class="status-info">
+          <div class="status-title" id="statusTitle">Detecting Assessment...</div>
+          <div class="status-desc" id="statusDesc">Scanning for NPTEL or GATEOverflow mock test...</div>
+        </div>
+      </div>
+
+      <!-- Test Info (Visible when detected) -->
+      <div id="testInfoSection" class="test-info-section hidden">
+        <div class="input-field-group">
+          <label for="mockNumberInput" class="field-label">Mock Test Identifier / Number:</label>
+          <input type="text" id="mockNumberInput" class="text-input" placeholder="e.g. Mock Test #18">
+        </div>
+        <div class="input-field-group">
+          <label for="testTitleInput" class="field-label">Course / Quiz Title:</label>
+          <input type="text" id="testTitleInput" class="text-input" placeholder="e.g. GATE Data Science Mock Test">
+        </div>
+        <div class="info-row">
+          <span class="info-label">Mode Detected:</span>
+          <span class="mode-badge" id="modeBadge">List View</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Questions Found:</span>
+          <span class="info-badge" id="questionCountBadge">0 Questions</span>
+        </div>
+      </div>
+
+      <!-- Settings Form -->
+      <div id="settingsSection" class="settings-section hidden">
+        <label class="section-heading">Working Space per Question</label>
+        <div class="workspace-options">
+          <label class="radio-card">
+            <input type="radio" name="workingSpace" value="small">
+            <span class="radio-label">Small <small>(~2 lines)</small></span>
+          </label>
+          <label class="radio-card active">
+            <input type="radio" name="workingSpace" value="medium" checked>
+            <span class="radio-label">Medium <small>(~5 lines)</small></span>
+          </label>
+          <label class="radio-card">
+            <input type="radio" name="workingSpace" value="large">
+            <span class="radio-label">Large <small>(~8 lines)</small></span>
+          </label>
+        </div>
+
+        <div class="checkbox-group">
+          <label class="checkbox-label" id="consentCheckboxLabel">
+            <input type="checkbox" id="includeConsent" checked>
+            <span>Include Question 1 (Instructions / Consent)</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" id="preserveImages" checked disabled>
+            <span>Preserve Embedded Images & Code</span>
+          </label>
+        </div>
+
+        <!-- Action Button -->
+        <button id="btnGenerate" class="btn-primary">
+          <span class="btn-icon">✨</span>
+          <span class="btn-text" id="btnGenerateText">Generate Practice Paper</span>
+        </button>
+      </div>
+
+      <!-- Guidance Notice -->
+      <div id="guidanceSection" class="guidance-box hidden">
+        <p><strong>Supported Platforms:</strong></p>
+        <ol>
+          <li><strong>NPTEL Mock Tests</strong> (<code>seek.nptel.ac.in</code>) — List View or Paginated View</li>
+          <li><strong>GATEOverflow Quizzes</strong> (<code>gateoverflow.in/quiz/quiz.php</code>) — Question Paper or Paged</li>
+        </ol>
+        <button id="btnRefresh" class="btn-secondary">🔄 Check Again</button>
+      </div>
+
+      <!-- Debug Panel -->
+      <details class="debug-panel">
+        <summary>🛠️ Developer & DOM Diagnostics</summary>
+        <div class="debug-content" id="debugContent">
+          <div class="debug-item"><span>Platform:</span> <strong id="debugPlatform">-</strong></div>
+          <div class="debug-item"><span>View Mode:</span> <strong id="debugMode">-</strong></div>
+          <div class="debug-item"><span>Questions Detected:</span> <strong id="debugCards">-</strong></div>
+          <div class="debug-item"><span>MCQ Count:</span> <strong id="debugMcqCount">-</strong></div>
+          <div class="debug-item"><span>MSQ Count:</span> <strong id="debugMsqCount">-</strong></div>
+          <div class="debug-item"><span>NAT Count:</span> <strong id="debugNatCount">-</strong></div>
+          <div class="debug-item"><span>Images Detected:</span> <strong id="debugImages">-</strong></div>
+          <div class="debug-item"><span>Potential Leaks:</span> <strong id="debugRawLeaks">0</strong></div>
+        </div>
+      </details>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <span>⭐ NPTEL & GATEOverflow Practice PDF Exporter • Local & Secure</span>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
