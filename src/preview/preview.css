@@ -377,17 +377,99 @@ body.font-large .question-title {
   text-indent: 0 !important;
 }
 
-mjx-assistive-mml {
-  display: none !important;
+/* ==========================================================================
+   MathML & MathJax Mathematical Formulas
+   ========================================================================== */
+math {
+  font-family: KaTeX_Main, "Times New Roman", "Cambria Math", "Latin Modern Math", serif !important;
+  font-size: 1.15em;
+  font-style: normal;
+  display: inline-math;
 }
 
-.MathJax_Preview {
+math[display="block"] {
+  display: block;
+  margin: 10px auto;
+  text-align: center;
+}
+
+math mfrac {
+  padding: 0 2px;
+  vertical-align: 0;
+}
+
+math mi {
+  font-style: italic;
+}
+
+math mn {
+  font-style: normal;
+}
+
+math mo {
+  font-style: normal;
+  padding: 0 1px;
+}
+
+.tex-math {
+  font-family: KaTeX_Main, "Times New Roman", Times, serif;
+  font-style: italic;
+  font-size: 1.05em;
+  padding: 0 2px;
+}
+
+/* Hide duplicate preview and assistive containers */
+.MathJax_Preview,
+.mjx-assistive-mml,
+mjx-assistive-mml,
+.MathJax_MathML {
   display: none !important;
+  position: absolute !important;
+  clip: rect(1px, 1px, 1px, 1px) !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  opacity: 0 !important;
 }
 
 .question-prompt mjx-container,
 .question-prompt .katex {
   font-size: 105%;
+}
+
+/* CommonHTML fallback styles in case any CHTML span remains */
+.mjx-chtml {
+  display: inline-block;
+  line-height: 0;
+  text-indent: 0;
+  text-align: left;
+  text-transform: none;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 105%;
+}
+
+.mjx-chtml .mjx-mfrac {
+  display: inline-block;
+  vertical-align: 0.07em;
+  padding: 0 0.22em;
+  text-align: center;
+}
+
+.mjx-chtml .mjx-numerator {
+  display: block;
+  text-align: center;
+}
+
+.mjx-chtml .mjx-denominator {
+  display: block;
+  text-align: center;
+}
+
+.mjx-chtml .mjx-line {
+  display: block;
+  border-top: 1px solid currentColor;
+  margin: 1px 0;
 }
 
 /* ==========================================================================
@@ -438,6 +520,15 @@ mjx-assistive-mml {
 .option-body {
   flex: 1;
   line-height: 1.5;
+}
+
+.option-body p {
+  margin: 0;
+  display: inline;
+}
+
+.option-body math {
+  vertical-align: middle;
 }
 
 .option-body img {

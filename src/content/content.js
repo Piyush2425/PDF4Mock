@@ -24,6 +24,71 @@
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
+  function normalizeMathJaxElements(root) {
+    if (!root) return;
+
+    // 1. Process all MathJax wrapper containers
+    const mathContainers = root.querySelectorAll(
+      ".mjx-chtml, .MathJax, .MathJax_CHTML, mjx-container, [id^='MathJax-Element-'][id$='-Frame']"
+    );
+
+    mathContainers.forEach(container => {
+      let replaced = false;
+
+      // Strategy A: data-mathml attribute (standard on GATEOverflow MathJax)
+      const dataMathml = container.getAttribute("data-mathml");
+      if (dataMathml) {
+        try {
+          const temp = document.createElement("div");
+          temp.innerHTML = dataMathml;
+          const mathElem = temp.querySelector("math");
+          if (mathElem) {
+            container.replaceWith(mathElem);
+            replaced = true;
+          }
+        } catch (e) {}
+      }
+
+      // Strategy B: Assistive MathML child (<span class="mjx-assistive-mml"><math>...</math></span>)
+      if (!replaced) {
+        const assistiveMath = container.querySelector(
+          ".mjx-assistive-mml math, mjx-assistive-mml math, .MathJax_MathML math, math"
+        );
+        if (assistiveMath) {
+          container.replaceWith(assistiveMath.cloneNode(true));
+          replaced = true;
+        }
+      }
+
+      // Strategy C: SVG math output
+      if (!replaced) {
+        const svg = container.querySelector("svg");
+        if (svg) {
+          container.replaceWith(svg.cloneNode(true));
+          replaced = true;
+        }
+      }
+
+      // Strategy D: Sibling <script type="math/tex">
+      if (!replaced && container.id) {
+        const baseId = container.id.replace(/-Frame$/, "");
+        const script = container.parentNode?.querySelector(`script#${baseId}[type*='math/tex']`);
+        if (script && script.textContent.trim()) {
+          const mathNode = document.createElement("span");
+          mathNode.className = "tex-math";
+          mathNode.textContent = script.textContent.trim();
+          container.replaceWith(mathNode);
+          replaced = true;
+        }
+      }
+    });
+
+    // 2. Remove all standalone assistive containers, previews, and MathJax script tags
+    root.querySelectorAll(
+      ".MathJax_Preview, .mjx-assistive-mml, mjx-assistive-mml, .MathJax_MathML, script[type*='math/tex']"
+    ).forEach(el => el.remove());
+  }
+
   function sanitizeHtml(elementOrHtml, baseOrigin) {
     if (!elementOrHtml) return "";
     let clone;
@@ -80,6 +145,9 @@
     ];
 
     clone.querySelectorAll(unwantedSelectors.join(", ")).forEach(el => el.remove());
+
+    // Convert and normalize MathJax formulas into clean native HTML5 MathML
+    normalizeMathJaxElements(clone);
 
     // Explicitly remove UI labels/containers containing "Your answer", "Enter your answer", "Flag for review", or "Question Type :" metadata
     clone.querySelectorAll("div, section, aside, span, p, h1, h2, h3, h4, label, font, b, i").forEach(el => {
@@ -553,7 +621,7 @@
             const lis = Array.from(ol.querySelectorAll("li"));
             lis.forEach((li, i) => {
               const liClone = li.cloneNode(true);
-              liClone.querySelectorAll(".MathJax_Preview").forEach(el => el.remove());
+              normalizeMathJaxElements(liClone);
               cleanOptions.push({
                 letter: alphabet[i] ? `${alphabet[i]}.` : `${i + 1}.`,
                 html: sanitizeHtml(liClone, "https://gateoverflow.in"),
@@ -868,6 +936,10 @@
       }
     });
 
+    const mathJaxStyles = Array.from(document.querySelectorAll("style[id*='MathJax'], style[id*='MJX']"))
+      .map(s => s.innerHTML)
+      .join("\n");
+
     return {
       success: true,
       platformId: adapter.platformId,
@@ -878,6 +950,7 @@
       generatedAt: new Date().toLocaleString(),
       totalExtracted: extractedQuestions.length,
       questions: extractedQuestions,
+      mathJaxStyles: mathJaxStyles || "",
       leakCheck: {
         passed: leakOccurrences === 0,
         leakCount: leakOccurrences,

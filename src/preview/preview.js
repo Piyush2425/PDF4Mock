@@ -57,6 +57,16 @@ document.addEventListener("DOMContentLoaded", async () => {
       workspaceSelect.value = data.workingSpace;
     }
 
+    // Inject captured MathJax styles from original page if available
+    if (data.mathJaxStyles) {
+      const existing = document.getElementById("injected-mathjax-styles");
+      if (existing) existing.remove();
+      const styleEl = document.createElement("style");
+      styleEl.id = "injected-mathjax-styles";
+      styleEl.textContent = data.mathJaxStyles;
+      document.head.appendChild(styleEl);
+    }
+
     // Render questions
     questionsList.innerHTML = "";
 

@@ -209,6 +209,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         generatedAt: result.generatedAt,
         totalQuestions: result.totalExtracted,
         workingSpace: workingSpace,
+        mathJaxStyles: result.mathJaxStyles || "",
         questions: result.questions
       };
 
