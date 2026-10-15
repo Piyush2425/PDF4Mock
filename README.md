@@ -67,7 +67,7 @@ However, online platforms like **NPTEL** and **GATEOverflow** show questions wit
 | Platform | URL Pattern | View Modes Supported |
 | :--- | :--- | :--- |
 | **NPTEL Mock Tests** | `https://seek.nptel.ac.in/*` | • List View (`.linear-view`)<br>• Paginated View (Chips `1`–`65`) |
-| **GATEOverflow** | `https://gateoverflow.in/quiz/quiz.php*` | • Question Paper View (`#viewQPDiv`)<br>• Paginated Quiz View |
+| **GATEOverflow** | `https://gateoverflow.in/quiz/quiz.php*`<br>`https://gateoverflow.in/quiz/results.php*` | • Results View (`results.php` - answers stripped, discuss kept)<br>• Question Paper View (`#viewQPDiv`)<br>• Paginated Quiz View |
 
 ---
 
@@ -134,12 +134,13 @@ Compatible with **Google Chrome**, **Brave Browser**, **Microsoft Edge**, and an
 6. Click **[ Export All Questions ]** (or **[ Generate Practice Paper ]**).
 7. A clean, printable tab will open automatically.
 
-### 2. GATEOverflow Quizzes (`gateoverflow.in`)
+### 2. GATEOverflow Quizzes & Results (`gateoverflow.in`)
 
-1. Open your quiz on `https://gateoverflow.in/quiz/quiz.php`.
-2. *(Recommended)* Click the **"Question Paper"** button on GATEOverflow's top toolbar.
-3. Click the **PDF4Mock** extension icon.
-4. Click **[ Generate Practice Paper ]**.
+1. Open your quiz on `https://gateoverflow.in/quiz/quiz.php` or your evaluated test on `https://gateoverflow.in/quiz/results.php`.
+2. *(For quiz.php)* You can click the **"Question Paper"** button or let PDF4Mock step through questions.
+3. *(For results.php)* PDF4Mock automatically extracts all questions in one instant click, stripping your attempted answers, correct answers, time taken, and evaluation results.
+4. Each question retains a clickable **"Discuss on GATEOverflow"** link for convenient post-practice review!
+5. Click the **PDF4Mock** extension icon and press **[ Generate Practice Paper ]**.
 
 ### 3. Printing & Saving as PDF
 

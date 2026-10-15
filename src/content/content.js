@@ -67,7 +67,16 @@
       "#timer",
       "#timeDiv",
       ".chips",
-      "button"
+      "button",
+      ".res_qs_bottom",
+      ".res_qs_bottom_meta",
+      ".res_qs_bottom_meta1",
+      "[class*='res_qs_bottom']",
+      "[class*='res_your']",
+      "[class*='res_correct']",
+      "[class*='res_status']",
+      "[class*='res_time']",
+      ".MathJax_Preview"
     ];
 
     clone.querySelectorAll(unwantedSelectors.join(", ")).forEach(el => el.remove());
@@ -82,7 +91,9 @@
         /Flag\s*for\s*review/i.test(text) ||
         /^Question\s*Type\s*:/i.test(text) ||
         /Marks\s*for\s*correct\s*answer/i.test(text) ||
-        /Negative\s*Marks\s*\d+/i.test(text)
+        /Negative\s*Marks\s*\d+/i.test(text) ||
+        /^Correct\s*Answer/i.test(text) ||
+        /^Time\s*taken/i.test(text)
       ) {
         el.remove();
       }
@@ -373,8 +384,8 @@
 
     extractMockMetadata() {
       const urlObj = new URL(window.location.href);
-      const testId = urlObj.searchParams.get("test_id") || urlObj.searchParams.get("id") || urlObj.searchParams.get("quiz_id") || "";
-      const titleElem = document.querySelector("#quizTitle, .quiz-title, #quizName, h1, h2, .test-title, #headDiv h2");
+      const testId = urlObj.searchParams.get("test_id") || urlObj.searchParams.get("id") || urlObj.searchParams.get("quiz_id") || urlObj.searchParams.get("log_id") || "";
+      const titleElem = document.querySelector("#quizTitle, .quiz-title, #quizName, h1, h2, .test-title, #headDiv h2, .res_title, .title");
       let pageTitle = titleElem ? titleElem.innerText.replace(/\s+/g, " ").trim() : document.title.replace(/\s+/g, " ").trim();
 
       return {
@@ -385,11 +396,15 @@
     },
 
     hasListView() {
+      if (document.querySelectorAll(".res_question").length > 0) return true;
       const qpDiv = document.querySelector("#viewQPDiv") || document.querySelector("#QPDiv");
       return !!(qpDiv && qpDiv.innerHTML.includes("Q."));
     },
 
     getTotalQuestionsCount() {
+      const resCards = document.querySelectorAll(".res_question");
+      if (resCards.length > 0) return resCards.length;
+
       const paletteButtons = document.querySelectorAll("#palette button, #navDiv button, .questionPaletteBtn, .btn-question, [id^='qbtn_']");
       if (paletteButtons.length > 0) return paletteButtons.length;
       return 1;
@@ -473,7 +488,123 @@
       };
     },
 
+    extractResultsPageQuestions(cards) {
+      const extracted = [];
+      const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+      cards.forEach((card, idx) => {
+        // Label: "Q #1" or data-orignum
+        const numElem = card.querySelector(".res_qs_num, [class*='res_qs_num']");
+        const origNum = card.getAttribute("data-orignum");
+        let rawLabel = numElem ? numElem.innerText.trim() : (origNum ? `Question ${origNum}` : `Question ${idx + 1}`);
+
+        // Type
+        const typeElem = card.querySelector(".res_qs_type, [class*='res_qs_type']");
+        const typeText = typeElem ? typeElem.innerText.trim() : "";
+        let qType = "MCQ";
+        if (/Multiple\s*Select/i.test(typeText) || /MSQ/i.test(typeText)) {
+          qType = "MSQ";
+        } else if (/Numerical/i.test(typeText) || /NAT/i.test(typeText)) {
+          qType = "NAT";
+        }
+
+        // Marks, Penalty, & Category
+        const marksElem = card.querySelector(".res_qs_marks, [class*='res_qs_marks']");
+        const penaltyElem = card.querySelector(".res_qs_penalty, [class*='res_qs_penalty']");
+        const catElem = card.querySelector(".res_qs_category, [class*='res_qs_category']");
+
+        let marksStr = marksElem ? marksElem.innerText.trim() : "";
+        if (penaltyElem && penaltyElem.innerText.trim()) {
+          marksStr += marksStr ? ` | ${penaltyElem.innerText.trim()}` : penaltyElem.innerText.trim();
+        }
+        const category = catElem ? catElem.innerText.trim() : "";
+
+        // Discuss Link (Preserve ONLY discuss option, discard user attempted answer)
+        const discussElem = card.querySelector(".res_discuss a, a.badge-primary, a[href*='gateoverflow.in']");
+        let discussUrl = "";
+        if (discussElem) {
+          const href = discussElem.getAttribute("href");
+          if (href) {
+            discussUrl = href.startsWith("http") ? href : new URL(href, "https://gateoverflow.in").href;
+          }
+        }
+        if (!discussUrl && card.getAttribute("data-postid")) {
+          discussUrl = `https://gateoverflow.in/${card.getAttribute("data-postid")}`;
+        }
+
+        // Prompt & Options strictly from .res_question_text (excludes attempted answer bar)
+        const textContainer = card.querySelector(".res_question_text, [class*='res_question_text']") || card;
+        let promptHtml = "<p><i>[Question content]</i></p>";
+        let promptText = "";
+        const cleanOptions = [];
+        let images = [];
+        let hasTables = false;
+        let hasCode = false;
+
+        if (textContainer) {
+          const clone = textContainer.cloneNode(true);
+
+          // Remove any bottom bars or MathJax previews
+          clone.querySelectorAll(".res_qs_bottom, .res_qs_bottom_meta, .res_qs_bottom_meta1, [class*='bottom_meta']").forEach(el => el.remove());
+          clone.querySelectorAll(".MathJax_Preview").forEach(el => el.remove());
+
+          const ol = clone.querySelector("ol, ul");
+          if (ol) {
+            const lis = Array.from(ol.querySelectorAll("li"));
+            lis.forEach((li, i) => {
+              const liClone = li.cloneNode(true);
+              liClone.querySelectorAll(".MathJax_Preview").forEach(el => el.remove());
+              cleanOptions.push({
+                letter: alphabet[i] ? `${alphabet[i]}.` : `${i + 1}.`,
+                html: sanitizeHtml(liClone, "https://gateoverflow.in"),
+                text: liClone.innerText.replace(/\s+/g, " ").trim()
+              });
+            });
+            ol.remove(); // Remove choices list from cloned prompt body
+          }
+
+          promptHtml = sanitizeHtml(clone, "https://gateoverflow.in");
+          promptText = clone.innerText.replace(/\s+/g, " ").trim();
+
+          images = Array.from(textContainer.querySelectorAll("img")).map(img => ({
+            src: img.getAttribute("src"),
+            alt: img.getAttribute("alt") || "",
+            width: img.getAttribute("width") || "",
+            height: img.getAttribute("height") || ""
+          }));
+
+          hasTables = clone.querySelectorAll("table").length > 0;
+          hasCode = clone.querySelectorAll("pre, code").length > 0;
+        }
+
+        extracted.push({
+          index: idx + 1,
+          rawLabel,
+          marks: marksStr,
+          category,
+          discussUrl,
+          promptHtml,
+          promptText,
+          type: cleanOptions.length > 0 ? qType : (qType === "MSQ" ? "MSQ" : "NAT"),
+          options: cleanOptions,
+          imagesCount: images.length,
+          hasImages: images.length > 0,
+          hasTables,
+          hasCode
+        });
+      });
+
+      return extracted;
+    },
+
     extractListView() {
+      // 1. Check results.php (.res_question cards)
+      const resCards = Array.from(document.querySelectorAll(".res_question"));
+      if (resCards.length > 0) {
+        return this.extractResultsPageQuestions(resCards);
+      }
+
+      // 2. Check quiz.php QPDiv
       const qpDiv = document.querySelector("#viewQPDiv") || document.querySelector("#QPDiv");
       if (!qpDiv) return null;
 
@@ -559,10 +690,30 @@
 
     inspect() {
       const meta = this.extractMockMetadata();
-      const isList = this.hasListView();
-      const listQuestions = isList ? this.extractListView() : null;
+      const isResults = document.querySelectorAll(".res_question").length > 0;
+      const isList = isResults || this.hasListView();
+      const listQuestions = isResults
+        ? this.extractResultsPageQuestions(Array.from(document.querySelectorAll(".res_question")))
+        : (this.hasListView() ? this.extractListView() : null);
+
       const paginationButtons = this.getPaginationButtons();
       const totalCount = listQuestions ? listQuestions.length : (paginationButtons.length > 0 ? paginationButtons.length : 1);
+
+      let mcqCount = 0;
+      let msqCount = 0;
+      let natCount = 0;
+      let totalImages = 0;
+
+      if (listQuestions) {
+        listQuestions.forEach(q => {
+          if (q.type === "MCQ") mcqCount++;
+          else if (q.type === "MSQ") msqCount++;
+          else natCount++;
+          totalImages += q.imagesCount;
+        });
+      } else {
+        mcqCount = totalCount;
+      }
 
       return {
         success: true,
@@ -571,22 +722,22 @@
         isSupportedPlatform: true,
         isListView: isList,
         isPaginatedView: !isList,
-        viewMode: isList ? "Question Paper List View" : "Paginated View (Palette Ready)",
+        viewMode: isResults ? "Results View (All Questions)" : (isList ? "Question Paper List View" : "Paginated View (Palette Ready)"),
         totalQuestions: totalCount,
         mockTestNumber: meta.mockTestNumber,
         testTitle: meta.testTitle,
         url: window.location.href,
         debugStats: {
           platform: this.platformName,
-          mode: isList ? "List View" : "Paginated View",
+          mode: isResults ? "Results View" : (isList ? "List View" : "Paginated View"),
           totalCards: totalCount,
           withPrompt: totalCount,
-          withOptions: totalCount,
-          withoutOptions: 0,
-          mcqCount: totalCount,
-          msqCount: 0,
-          natCount: 0,
-          totalImages: 0,
+          withOptions: mcqCount + msqCount,
+          withoutOptions: natCount,
+          mcqCount,
+          msqCount,
+          natCount,
+          totalImages,
           potentialLeaksDetectedInRawDom: 0
         }
       };

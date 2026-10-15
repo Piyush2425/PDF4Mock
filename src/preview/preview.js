@@ -73,15 +73,33 @@ document.addEventListener("DOMContentLoaded", async () => {
       titleSpan.className = "question-title";
       titleSpan.innerHTML = `
         <span>${escapeHtml(q.rawLabel || `Question ${q.index}`)}</span>
-        <span class="question-type-tag">${q.type || "QUESTION"}</span>
+        <span class="question-type-tag">${escapeHtml(q.type || "QUESTION")}</span>
+        ${q.category ? `<span class="question-category-tag">${escapeHtml(q.category)}</span>` : ""}
       `;
 
-      const marksSpan = document.createElement("div");
-      marksSpan.className = "question-marks-badge";
-      marksSpan.textContent = q.marks ? `[ ${q.marks} ]` : "";
+      const rightMeta = document.createElement("div");
+      rightMeta.className = "question-right-meta";
+
+      if (q.marks) {
+        const marksSpan = document.createElement("div");
+        marksSpan.className = "question-marks-badge";
+        marksSpan.textContent = `[ ${q.marks} ]`;
+        rightMeta.appendChild(marksSpan);
+      }
+
+      if (q.discussUrl) {
+        const discussBtn = document.createElement("a");
+        discussBtn.className = "discuss-btn";
+        discussBtn.href = q.discussUrl;
+        discussBtn.target = "_blank";
+        discussBtn.rel = "noopener noreferrer";
+        discussBtn.title = "View discussion on GATEOverflow";
+        discussBtn.innerHTML = `💬 Discuss ↗`;
+        rightMeta.appendChild(discussBtn);
+      }
 
       headerRow.appendChild(titleSpan);
-      if (q.marks) headerRow.appendChild(marksSpan);
+      headerRow.appendChild(rightMeta);
       qBlock.appendChild(headerRow);
 
       // Question Prompt
@@ -124,6 +142,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         natDiv.className = "nat-answer-row";
         natDiv.innerHTML = `<span>Answer:</span> <span class="answer-line"></span>`;
         qBlock.appendChild(natDiv);
+      }
+
+      // Discuss Bar (preserves ONLY discuss option from results.php, removes attempted answers)
+      if (q.discussUrl) {
+        const discussBar = document.createElement("div");
+        discussBar.className = "question-discuss-bar";
+        discussBar.innerHTML = `
+          <a class="discuss-action-link" href="${escapeHtml(q.discussUrl)}" target="_blank" rel="noopener noreferrer">
+            <span class="discuss-icon">💬</span>
+            <span class="discuss-text">Discuss on GATEOverflow</span>
+            <span class="discuss-arrow">↗</span>
+          </a>
+        `;
+        qBlock.appendChild(discussBar);
       }
 
       // Ruled Working Space Box

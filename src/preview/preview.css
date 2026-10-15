@@ -248,10 +248,47 @@ body.font-large .question-title {
   color: #374151;
 }
 
+.question-category-tag {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: #065f46;
+}
+
+.question-right-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .question-marks-badge {
   font-size: 11.5px;
   font-weight: 600;
   color: #4b5563;
+}
+
+.discuss-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1d4ed8;
+  text-decoration: none;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+
+.discuss-btn:hover {
+  background: #dbeafe;
+  border-color: #93c5fd;
+  color: #1e40af;
 }
 
 /* Question Prompt Body */
@@ -344,6 +381,10 @@ mjx-assistive-mml {
   display: none !important;
 }
 
+.MathJax_Preview {
+  display: none !important;
+}
+
 .question-prompt mjx-container,
 .question-prompt .katex {
   font-size: 105%;
@@ -420,6 +461,47 @@ mjx-assistive-mml {
   min-width: 220px;
   height: 18px;
   margin-left: 8px;
+}
+
+/* ==========================================================================
+   GATEOverflow Discuss Action Bar
+   ========================================================================== */
+.question-discuss-bar {
+  margin-top: 10px;
+  margin-bottom: 6px;
+  padding-top: 6px;
+  display: flex;
+  align-items: center;
+}
+
+.discuss-action-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #2563eb;
+  text-decoration: none;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  padding: 3px 10px;
+  transition: all 0.15s ease;
+}
+
+.discuss-action-link:hover {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1d4ed8;
+}
+
+.discuss-action-link .discuss-icon {
+  font-size: 13px;
+}
+
+.discuss-action-link .discuss-arrow {
+  font-size: 11px;
+  color: #64748b;
 }
 
 /* ==========================================================================
@@ -548,5 +630,23 @@ mjx-assistive-mml {
 
   .option-marker .choice-box {
     border: 1.5px solid #000000 !important;
+  }
+
+  .discuss-btn {
+    display: none !important;
+  }
+
+  .question-discuss-bar {
+    margin-top: 6px !important;
+    margin-bottom: 4px !important;
+  }
+
+  .discuss-action-link {
+    background: transparent !important;
+    border: 1px solid #9ca3af !important;
+    color: #111827 !important;
+    font-size: 10px !important;
+    text-decoration: none !important;
+    padding: 2px 6px !important;
   }
 }
