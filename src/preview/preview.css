@@ -380,42 +380,196 @@ body.font-large .question-title {
 /* ==========================================================================
    MathML & MathJax Mathematical Formulas
    ========================================================================== */
-math {
-  font-family: KaTeX_Main, "Times New Roman", "Cambria Math", "Latin Modern Math", serif !important;
-  font-size: 1.15em;
+/* MathJax 2 CommonHTML Complete Layout Rules */
+.mjx-chtml {
+  display: inline-block;
+  line-height: 0;
+  text-indent: 0;
+  text-align: left;
+  text-transform: none;
   font-style: normal;
-  display: inline-math;
+  font-weight: normal;
+  font-size: 105%;
+  font-size-adjust: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  word-spacing: normal;
+  white-space: nowrap;
+  float: none;
+  direction: ltr;
+  max-width: none;
+  max-height: none;
+  min-width: 0;
+  min-height: 0;
+  border: 0;
+  margin: 0;
+  padding: 1px 0;
 }
 
-math[display="block"] {
+.MJXc-display {
+  display: block !important;
+  text-align: center;
+  margin: 1em 0;
+  padding: 0;
+}
+
+.mjx-math {
+  display: inline-block;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.mjx-math * {
+  display: inline-block;
+  box-sizing: content-box !important;
+  text-align: left;
+}
+
+.mjx-numerator {
   display: block;
-  margin: 10px auto;
   text-align: center;
 }
 
-math mfrac {
-  padding: 0 2px;
-  vertical-align: 0;
+.mjx-denominator {
+  display: block;
+  text-align: center;
 }
 
-math mi {
-  font-style: italic;
+.mjx-line {
+  display: block;
+  height: 0;
+  border-top: 1.2px solid currentColor;
+  margin: 1px 0;
 }
 
-math mn {
-  font-style: normal;
+.MJXc-stacked {
+  height: 0;
+  position: relative;
 }
 
-math mo {
-  font-style: normal;
-  padding: 0 1px;
+.MJXc-stacked > * {
+  position: absolute;
 }
 
-.tex-math {
-  font-family: KaTeX_Main, "Times New Roman", Times, serif;
-  font-style: italic;
-  font-size: 1.05em;
-  padding: 0 2px;
+.MJXc-bevelled > * {
+  display: inline-block;
+}
+
+.mjx-stack {
+  display: inline-block;
+}
+
+.mjx-op {
+  display: block;
+}
+
+.mjx-under {
+  display: table-cell;
+}
+
+.mjx-over {
+  display: block;
+}
+
+.mjx-stack > .mjx-sup {
+  display: block;
+}
+
+.mjx-stack > .mjx-sub {
+  display: block;
+}
+
+.mjx-prestack > .mjx-presup {
+  display: block;
+}
+
+.mjx-prestack > .mjx-presub {
+  display: block;
+}
+
+.mjx-delim-h > .mjx-char {
+  display: inline-block;
+}
+
+.mjx-surd {
+  vertical-align: top;
+}
+
+.mjx-surd + .mjx-box {
+  display: inline-flex;
+}
+
+.mjx-mtr {
+  display: table-row;
+}
+
+.mjx-mlabeledtr {
+  display: table-row;
+}
+
+.mjx-mtd {
+  display: table-cell;
+  text-align: center;
+}
+
+.mjx-label {
+  display: table-row;
+}
+
+.mjx-box {
+  display: inline-block;
+}
+
+.mjx-block {
+  display: block;
+}
+
+.mjx-span {
+  display: inline;
+}
+
+.mjx-char {
+  display: block;
+  white-space: pre;
+}
+
+.mjx-itable {
+  display: inline-table;
+  width: auto;
+}
+
+.mjx-row {
+  display: table-row;
+}
+
+.mjx-cell {
+  display: table-cell;
+}
+
+.mjx-table {
+  display: table;
+  width: 100%;
+}
+
+.mjx-strut {
+  width: 0;
+  padding-top: 1em;
+}
+
+.mjx-vsize {
+  width: 0;
+}
+
+.MJXc-space1 {
+  margin-left: 0.167em;
+}
+
+.MJXc-space2 {
+  margin-left: 0.222em;
+}
+
+.MJXc-space3 {
+  margin-left: 0.278em;
 }
 
 /* Hide duplicate preview and assistive containers */
@@ -432,44 +586,42 @@ mjx-assistive-mml,
   opacity: 0 !important;
 }
 
+/* Native MathML Clean Fallback */
+math {
+  font-family: KaTeX_Main, "Times New Roman", "Cambria Math", "Latin Modern Math", serif !important;
+  font-size: 1.1em;
+  font-style: normal;
+  display: inline;
+}
+
+math[display="block"] {
+  display: block;
+  margin: 10px auto;
+  text-align: center;
+}
+
+math * {
+  display: inline;
+}
+
+math mfrac {
+  display: inline-flex;
+  flex-direction: column;
+  vertical-align: middle;
+  text-align: center;
+  padding: 0 2px;
+}
+
+.tex-math {
+  font-family: KaTeX_Main, "Times New Roman", Times, serif;
+  font-style: italic;
+  font-size: 1.05em;
+  padding: 0 2px;
+}
+
 .question-prompt mjx-container,
 .question-prompt .katex {
   font-size: 105%;
-}
-
-/* CommonHTML fallback styles in case any CHTML span remains */
-.mjx-chtml {
-  display: inline-block;
-  line-height: 0;
-  text-indent: 0;
-  text-align: left;
-  text-transform: none;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 105%;
-}
-
-.mjx-chtml .mjx-mfrac {
-  display: inline-block;
-  vertical-align: 0.07em;
-  padding: 0 0.22em;
-  text-align: center;
-}
-
-.mjx-chtml .mjx-numerator {
-  display: block;
-  text-align: center;
-}
-
-.mjx-chtml .mjx-denominator {
-  display: block;
-  text-align: center;
-}
-
-.mjx-chtml .mjx-line {
-  display: block;
-  border-top: 1px solid currentColor;
-  margin: 1px 0;
 }
 
 /* ==========================================================================
